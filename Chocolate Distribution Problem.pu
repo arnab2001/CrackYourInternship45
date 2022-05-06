@@ -1,0 +1,37 @@
+class Solution(object):
+	def candy(self, ratings):
+		"""
+		Nadav B
+		:type ratings: List[int]
+		:rtype: int
+		"""
+		num_candies, level, max_point_level = 0,0, None
+		
+		for i in range(len(ratings)):
+			level += 1
+			num_candies += level
+			if i + 1 <= len(ratings) - 1:  # if not last point
+				if ratings[i] == ratings[i + 1]:  # reset if have equal point
+					
+					if max_point_level is not None and level >= max_point_level:
+						num_candies += level + 1 - max_point_level
+					
+					max_point_level = None  # either way cancel max point as it is not relevant anymore
+					level = 0
+					
+				elif i > 0:
+					if ratings[i] < ratings[i + 1] and ratings[i] < ratings[i - 1]:  # min point
+						if max_point_level is not None and level >= max_point_level:
+							num_candies += level + 1 - max_point_level
+						max_point_level = None
+						level = 1
+						
+					elif ratings[i] > ratings[i + 1] and ratings[i] > ratings[i - 1]:  # max point
+						max_point_level = level
+						level = 0
+						
+			else:  # if last point
+				if max_point_level is not None and level >= max_point_level:
+					num_candies += level + 1 - max_point_level
+		
+		return num_candies
